@@ -1,28 +1,18 @@
-# `ATmega328P` library
+# Linear regression implementation
 
-## Description
-Library containing miscellaneous drivers and containers for microcontroller `ATmega328P`.  
-The code is written in C++17 and adapted for Microchip Studio. 
+## Inlämning
+    1. Vad lärde ni er av projektet?
+    2. Vad var lätt/svårt?
+    3. Vad hade ni velat ha lärt er mer innan projektet?
+    4. Övriga kommentarer?
 
 
-## Content
-The library includes the following drivers:  
-* `ADC`: Driver for the `ATmega328P` ADC.  
-* `EEPROM`: Driver for utilization of the `ATmega328P` EEPROM.  
-* `GPIO`: Generic driver for GPIO devices.  
-* `Timer`: Driver for the `ATmega328P` hardware timers.  
-* `Serial`: Driver for serial transmission via USART.  
-* `Watchdog`: Driver for the `ATmega328P` watchdog timer.  
+1. Väldigt uppskattat med upplägget för denna projekt. Jag är ju van med att börja om från skratch, vilket inte är så förekommande i arbetslivet. Så det var väldigt
+	att kunna navigera sig och bekanta sig med att impletera ett program i ett fördigt system.. 
 
-The library includes the following generic containers:  
-* `Array`: Implementation of static arrays of any data type.  
-* `CallbackArray`: Implementation of callback arrays of arbitrary size.  
-* `List`: Implementation of doubly linked lists of any data type.  
-* `Pair`: Implementation of pairs containing values of any data type.  
-* `Vector`: Implementation of dynamic vectors of any data type.  
+2. Det var utmannade att bygga LinReg modellen. Är fortfarande ganska färsäk med självmant lista ut vad som behövs för att bygga en linjär regressionsmodell, så jag fick vid några
+	tillfällen gå tillbaka till vad jag har tidigare gjort för se vad som saknas i mitt program. Utöver detta, så känner jag mig mer bekväm med att jobba med classer i cpp.
 
-The library also includes miscellaneous utility functions, type traits etc.  
+3. Jag hade velat jobbba i stm32 istället för arduino.
 
-## Usage 
-This library must be opened in a Windows environment to build.  
-Copy the library into a Windows path, such as the C drive, before building.
+4. Jag är nöjd. 
