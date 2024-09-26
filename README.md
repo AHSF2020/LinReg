@@ -2,7 +2,7 @@
 
 ## Dokumentation
 
-*`predict` : En funktion som används för att träna datorn efter mönster
+* `predict` : En funktion som används för att träna datorn efter mönster
 * `train` : En träningsmodell som baserad på predict ger antal epokrar som ska gå igenom modellen med en lärningskurva.
 * `tempdata` : Finns i main; används för att beräkna, prediktera och printa ut temperaturen 
 
