@@ -1,5 +1,12 @@
 # Linear regression implementation
 
+## Dokumentation
+
+*`predict` : En funktion som används för att träna datorn efter mönster
+* `train` : En träningsmodell som baserad på predict ger antal epokrar som ska gå igenom modellen med en lärningskurva.
+* `tempdata` : Finns i main; används för att beräkna, prediktera och printa ut temperaturen 
+
+
 ## Inlämning
     1. Vad lärde ni er av projektet?
     2. Vad var lätt/svårt?
