@@ -1,10 +1,10 @@
 # Linear regression implementation
 
-## Dokumentation
+## Dokumentation för nya tillagda funktioner från machine_learning.h och ändringar i main.cpp
 
 * `predict` : En funktion som används för att träna datorn efter mönster
 * `train` : En träningsmodell som baserad på predict ger antal epokrar som ska gå igenom modellen med en lärningskurva.
-* `tempdata` : Finns i main; används för att beräkna, prediktera och printa ut temperaturen 
+* `tempdata` : Finns i main; används för att beräkna, prediktera och printa ut temperaturen. 
 
 
 ## Inlämning
