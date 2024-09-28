@@ -5,38 +5,59 @@
  *  Author: AdelH
  */ 
 
+/*
+ * Kommentarer från Erik:
+ *
+ * Överlag ser det mycket bra ut. Det enda jag har att anmärka på är:
+ *     - Använd engelska kommentarer.
+ *     - Kommentera helst enligt Doxygen, se LinReg::LinReg samt LinReg::predict nedan.
+ * 
+ */
+
 #include "vector.h"
 
 using namespace container;
 
- namespace ml
- {
+namespace ml
+{
 
-    class LinReg
-    {
-        public:
-            LinReg() = delete;
-            // protottyp för konstruktor
-            LinReg(const Vector<double>& LinRegInput, const Vector<double>& LinRegOutput);
+class LinReg
+{
+public:
+    LinReg() = delete;
+    
+    /********************************************************************************
+     * @brief Creates a new linear regression model.
+     * 
+     * @param LinRegInput Reference to vector holding input values for training.
+     * @param LinRegOutput Reference to vector holding output values for training.
+     ********************************************************************************/
+    LinReg(const Vector<double>& LinRegInput, const Vector<double>& LinRegOutput);
 
-            // Get methods protoyyper
-            const Vector<double>& input() const;
-            const Vector<double>& output() const;
+    const Vector<double>& input() const;
+    const Vector<double>& output() const;
 
-            // Metode prototyper för att träna och prediktera behövs.
-            bool train(const size_t epochCount, const double learningRate = 0.01);  // funktionsdeklaration för köra epoch:Er för regressionsmodellen
-            double predict(const double input) const;   //genomför en prediction från input värderna >> main
+    bool train(const size_t epochCount, const double learningRate = 0.01); 
+    
+    /********************************************************************************
+     * @brief Performs prediction based on given input.
+     * 
+     * @param input The input for which to predict.
+     * 
+     * @return The predicted value as a double.
+     ********************************************************************************/
+    double predict(const double input) const;
 
 
-        private:
-            Vector<double> myInput;
-            Vector<double> myOutput;
-            Vector<double>myOrder;
-            double myBias;
-            double myWeight;
+private:
+    Vector<double> myInput;
+    Vector<double> myOutput;
+    Vector<double>myOrder;
+    double myBias;
+    double myWeight;
 
-            void optimize(const double input, const double reference, const double learningRate);
-            void randomizer();
-    }; // end class LinReg
+    void optimize(const double input, const double reference, const double learningRate);
+    void randomizer();
+}; // end class LinReg
 
- }// Namespace ml
+ } // namespace ml
