@@ -1,5 +1,5 @@
 /********************************************************************************
- * @brief Demonstration of GPIO device drivers in C++.
+ * @brief Embedded temperature prediction system with a linear regression model.
  ********************************************************************************/
 #include "adc.h"
 #include "gpio.h"
@@ -16,48 +16,51 @@ using namespace driver;
 namespace 
 {
 
-constexpr uint8_t tempSensor{2U};
+constexpr uint8_t tempSensor{2U}; // Temp sensor PIN.
 
 /********************************************************************************
  * @brief Devices used in the embedded system.
  *
- * @param errorLed    LED connected to pin 13, used as an error indicator.
+ * @param led              LED connected to pin 13, used as an error indicator
+ *                         and/or temperature prediction indicator.
  * @param predictionButton Button connected to pin 9, used to toggle the LED.
- * @param debounceTimer  Timer used to reduced the effect of contact bounces when
- *                pressing the button.
- * @param predictionTimer  Timer used to toggle the LED every 100 ms when enabled.
+ * @param debounceTimer    Timer used to reduced the effect of contact bounces when
+ *                         pressing the button.
+ * @param predictionTimer  Timer used to predict the temperature every 60 seconds.
  ********************************************************************************/
-GPIO errorLed{8, GPIO::Direction::Output};
+GPIO led{8, GPIO::Direction::Output}; 
 GPIO predictionButton{13, GPIO::Direction::InputPullup};
 Timer debounceTimer{Timer::Circuit::Timer0, 300};
 Timer predictionTimer{Timer::Circuit::Timer1, 60000};
 
+/********************************************************************************
+ * @brief Linear regression model and it's training data.
+ *
+ * @param input  Vector holding input values for training.
+ * @param output Vector holding output values for training.
+ * @param linReg Linear regression model instance.
+ ********************************************************************************/
 Vector<double> input {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5};
 Vector<double> output {-50, -40, -30, -20, -10, 0.0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-ml::LinReg LinReg{input, output};
+ml::LinReg linReg{input, output};
 
-// Så här beräkningar du inspänningen (det som du låter din modell prediktera på):
-// Uin = duty cycle * 5;
-// Låt din modell prediktera med Uin som input, den bör gissa på motsvarande temperaturen om den har tränats rätt.
+/********************************************************************************
+ * @brief Predicts the temperature with the linear regression model and prints
+ *        the predicted value in the serial terminal.
+ ********************************************************************************/
+void tempData(void)
+{
+    const auto inputVoltage{adc::getDutyCycle(tempSensor)* 5};
+    const auto temperature{static_cast<int>(linReg.predict(inputVoltage) + 0.5)};
+    serial::printf("%d Celsius\n", temperature);
+}
 
 /********************************************************************************
  * @brief Callback routine called when predictionButton is pressed or released.
- *        Every time predictionButton is pressed, predictionTimer is toggled, which indirectly
- *        toggles the LED (since predictionTimer is responsible for toggling errorLed).
+ *        Temperature prediction is performed every time the button is pressed.
  *        Pin change interrupts are disabled for 300 ms on the button's I/O port
  *        to reduce the effects of contact bounces.
  ********************************************************************************/
-
- void tempData(void)
- {
-     // Beräkna Uin genom att kalla på adc::dutyCycle, multiplicera med 5.
-     const auto inputVoltage{adc::getDutyCycle(tempSensor)* 5};
-
-     // Hör ska vi prediktera temperaturen.
-     const int temperature{static_cast<int>(LinReg.predict(inputVoltage) + 0.5)};
-     serial::printf("%d Celcius\n", temperature);
-
- }
 void buttonCallback(void) 
 {
     predictionButton.disableInterruptsOnIoPort();
@@ -81,24 +84,24 @@ void debounceTimerCallback(void)
 }
 
 /********************************************************************************
- * @brief Toggles errorLed when predictionTimer elapses, which is every 100 ms when enabled.
+ * @brief Predicts the temperature and toggles the LED when the prediction timer 
+ *        elapses, which is every 60 seconds (or 60 seconds after the last
+ *        button push).
  ********************************************************************************/
 void predictionTimerCallback(void) 
 {
-     errorLed.toggle(); // Ta bort denna rad, det var bara för att visa.
-     // Prediktera tenperaturen här (precis som ovan),
+     led.toggle(); 
      tempData();
 }
 
 /********************************************************************************
- * @brief Sets callback routines, enabled pin change interrupt on predictionButton and
- *        enables the watchdog timer in system reset mode.
+ * @brief Trains linear regression model and initializes hardware.
  ********************************************************************************/
 inline void setup(void) 
 {
-    if (!LinReg.train(1000 /*antal epoch*/, 0.1 /*LR*/)) 
+    if (!linReg.train(1000, 0.1)) 
     { 
-        errorLed.set(); 
+        led.set(); 
         return;
     }
 
@@ -133,5 +136,3 @@ int main(void)
     }
 
 };
-
-
